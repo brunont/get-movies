@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { ActivityIndicator, ListView, Text, View, Image, StyleSheet } from 'react-native';
 import { Col, Row, Grid } from "react-native-easy-grid";
+import ImageLoad from 'react-native-image-placeholder';
 
 export default class Movies extends Component {	
   constructor(props) {
@@ -30,8 +31,8 @@ export default class Movies extends Component {
   render() {
 		const styles = StyleSheet.create({
 			image: {
-				width: 100,
-				height: 100
+				height: 100,
+				width: '100%'
 			},
 			separator: {
 				flex: 1,
@@ -40,11 +41,14 @@ export default class Movies extends Component {
 			},
 			text: {
 				fontSize: 16,
+        paddingLeft: 10,
 				color: '#FFFFFF',
 				fontFamily: 'Gill Sans'
 			},
 			textTitle: {
-				fontSize: 22,
+				fontSize: 20,
+        paddingTop: 5,
+        paddingLeft: 10,
 				color: '#FFFFFF',
 				fontFamily: 'Gill Sans'
 			},
@@ -57,10 +61,10 @@ export default class Movies extends Component {
 		const Row = (props) => (
 			<View>
         <Grid>
-          <Row size={25}>
-            <Image source={{ uri: props.Poster}} style={styles.image} />
-          </Row>
-          <Row size={75}>
+          <Col size={30}>
+            <ImageLoad style={styles.image} source={{ uri: props.Poster }} />
+          </Col>
+          <Col size={70}>
             <Text style={styles.textTitle}>
               {`${props.Title} - ${props.Year}`}
             </Text>
@@ -70,7 +74,7 @@ export default class Movies extends Component {
             <Text style={styles.text}>
               {`IMDB: ${props.imdbID}`}
             </Text>
-          </Row>
+          </Col>
         </Grid>
 			</View>
 		);
