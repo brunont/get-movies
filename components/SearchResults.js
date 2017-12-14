@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
     color: CssColors.darkColor
   },
   view: {
+    flex: 1,
     paddingTop: 20,
     backgroundColor: CssColors.lightColor
   }
