@@ -18,6 +18,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
     color: CssColors.darkColor
   },
+  textError: {
+    color: CssColors.errorColor
+  },
   view: {
     flex: 1,
     alignItems: 'center',
@@ -27,6 +30,11 @@ const styles = StyleSheet.create({
 });
 
 export default class Search extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { showNotFound: false };
+  }
+
   handlePress = () => {
     let textSearch = this.state.textSearch;
     let urlApiMovies = "https://jsonmock.hackerrank.com/api/movies/search/?Title=" + textSearch;
@@ -34,13 +42,17 @@ export default class Search extends Component {
     return fetch(urlApiMovies)
       .then((response) => response.json())
       .then((responseJson) => {
-        let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        this.setState({
-          isLoading: false,
-          dataSource: ds.cloneWithRows(responseJson.data),
-        }, function() {
-          Actions.searchResults({ data: ds.cloneWithRows(responseJson.data)});
-        });
+        let data = responseJson.data;
+
+        if (data.length > 0) { 
+          this.setState({showNotFound: false});
+
+          let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
+          Actions.searchResults({ data: ds.cloneWithRows(data) });
+        } else {
+          this.setState({showNotFound: true});
+        }
       })
 		.catch((error) => {
 			console.error(error);
@@ -50,12 +62,17 @@ export default class Search extends Component {
   render() {
     return (
       <View style={styles.view}>
+        { this.state.showNotFound && 
+          <Text style={styles.textError}>
+            Nenhum filme encontrado :(
+          </Text>
+        }
         <Text style={styles.text}>
           Sobre qual filme você quer saber mais?
         </Text>
         <TextInput
           style={styles.input}
-          ref= {(el) => { this.textSearch = el; }}
+          ref={(el) => { this.textSearch = el; }}
           onChangeText={(textSearch) => this.setState({textSearch})}
         />
         <Button
