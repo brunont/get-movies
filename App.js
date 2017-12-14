@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { ActivityIndicator, ListView, Text, View, Image, StyleSheet } from 'react-native';
-import { Col, Row, Grid } from "react-native-easy-grid";
+import { Card } from 'react-native-elements';
 import ImageLoad from 'react-native-image-placeholder';
+import { ActivityIndicator, ListView, Text, View, StyleSheet } from 'react-native';
 
 export default class Movies extends Component {	
   constructor(props) {
@@ -23,65 +23,49 @@ export default class Movies extends Component {
           // do something with new state
         });
       })
-      .catch((error) => {
-        console.error(error);
-      });
+		.catch((error) => {
+			console.error(error);
+		});
   }
 
   render() {
 		const styles = StyleSheet.create({
-			image: {
-				height: 100,
-				width: '100%'
-			},
-			separator: {
-				flex: 1,
-				backgroundColor: '#8E8E8E',
-				height: StyleSheet.hairlineWidth
-			},
+      image: {
+        height: 150
+      },
 			text: {
-				fontSize: 16,
-        paddingLeft: 10,
-				color: '#FFFFFF',
-				fontFamily: 'Gill Sans'
-			},
-			textTitle: {
-				fontSize: 20,
-        paddingTop: 5,
-        paddingLeft: 10,
-				color: '#FFFFFF',
-				fontFamily: 'Gill Sans'
+				marginTop: 10
 			},
 			view: {
 				paddingTop: 20,
-				backgroundColor: '#141414'
-			}
+				backgroundColor: '#f1f1f1'
+			},
+      viewLoading:{
+        flex: 1,
+				alignItems: 'center',
+				justifyContent: 'center',
+				backgroundColor: '#f1f1f1'
+      }
 		});
 
 		const Row = (props) => (
-			<View>
-        <Grid>
-          <Col size={30}>
-            <ImageLoad style={styles.image} source={{ uri: props.Poster }} />
-          </Col>
-          <Col size={70}>
-            <Text style={styles.textTitle}>
-              {`${props.Title} - ${props.Year}`}
-            </Text>
-            <Text style={styles.text}>
-              {`Type: ${props.Type}`}
-            </Text>
-            <Text style={styles.text}>
-              {`IMDB: ${props.imdbID}`}
-            </Text>
-          </Col>
-        </Grid>
-			</View>
+			<Card title={props.Title}>
+        <ImageLoad style={styles.image} source={{ uri: props.Poster }} />
+				<Text style={styles.text}>
+					{`YEAR: ${props.Year}`}
+				</Text>
+				<Text style={styles.text}>
+					{`TYPE: ${props.Type}`}
+				</Text>
+				<Text style={styles.text}>
+					{`IMDB: ${props.imdbID}`}
+				</Text>
+			</Card>
 		);
 
     if (this.state.isLoading) {
       return (
-        <View style={{flex: 1, paddingTop: 20}}>
+        <View style={styles.viewLoading}>
           <ActivityIndicator />
         </View>
       );
@@ -92,7 +76,6 @@ export default class Movies extends Component {
         <ListView
           dataSource={this.state.dataSource}
           renderRow={(data) => <Row {...data} />}
-					renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />}
         />
       </View>
     );
